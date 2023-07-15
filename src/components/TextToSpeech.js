@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './TextToSpeech.css'; // Import CSS styles for the component
 
 const TextToSpeech = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -25,10 +26,14 @@ const TextToSpeech = () => {
   }, []);
 
   const handleTogglePlayback = () => {
-    setIsPlaying((prevIsPlaying) => !prevIsPlaying);
+    if (isPlaying) {
+      stopPlayback();
+    } else {
+      startPlayback();
+    }
   };
 
-  const speakText = () => {
+  const startPlayback = () => {
     const speech = new SpeechSynthesisUtterance(text);
     if (selectedVoice) {
       speech.voice = selectedVoice;
@@ -38,6 +43,7 @@ const TextToSpeech = () => {
     speech.pitch = pitch;
 
     speechSynthesis.speak(speech);
+    setIsPlaying(true);
   };
 
   const stopPlayback = () => {
@@ -68,21 +74,17 @@ const TextToSpeech = () => {
   };
 
   return (
-    <div>
-      <textarea
-        value={text}
-        onChange={handleTextChange}
-        style={{
-          width: '500px',
-          height: '500px',
-          margin: '0 auto',
-          display: 'block',
-        }}
-      />
-      <br />
-      <label>
+    <div className="container">
+      <div className="circle" onClick={handleTogglePlayback}>
+        <span className={`icon ${isPlaying ? 'stop' : 'play'}`} />
+      </div>
+      <label className="label">
         Voice:
-        <select value={selectedVoice?.name} onChange={handleVoiceChange}>
+        <select
+          value={selectedVoice?.name}
+          onChange={handleVoiceChange}
+          className="select-input"
+        >
           {voices.map((voice) => (
             <option key={voice.name} value={voice.name}>
               {voice.name}
@@ -90,8 +92,7 @@ const TextToSpeech = () => {
           ))}
         </select>
       </label>
-      <br />
-      <label>
+      <label className="label">
         Volume:
         <input
           type="range"
@@ -100,10 +101,10 @@ const TextToSpeech = () => {
           step="0.1"
           value={volume}
           onChange={handleVolumeChange}
+          className="range-input"
         />
       </label>
-      <br />
-      <label>
+      <label className="label">
         Rate:
         <input
           type="range"
@@ -112,10 +113,10 @@ const TextToSpeech = () => {
           step="0.1"
           value={rate}
           onChange={handleRateChange}
+          className="range-input"
         />
       </label>
-      <br />
-      <label>
+      <label className="label">
         Pitch:
         <input
           type="range"
@@ -124,14 +125,14 @@ const TextToSpeech = () => {
           step="0.1"
           value={pitch}
           onChange={handlePitchChange}
+          className="range-input"
         />
       </label>
-      <br />
-      <button onClick={handleTogglePlayback}>
-        {isPlaying ? 'Stop' : 'Play'}
-      </button>
-      {isPlaying && <button onClick={stopPlayback}>Stop Playback</button>}
-      {!isPlaying && <button onClick={speakText}>Play Text</button>}
+      <textarea
+        value={text}
+        onChange={handleTextChange}
+        className="text-input"
+      />
     </div>
   );
 };

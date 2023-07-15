@@ -4,7 +4,7 @@ import TextToSpeech from './components/TextToSpeech';
 function App() {
   return (
     <div>
-      <h1>Text to Speech</h1>
+      <h1>Natural Reader</h1>
       <TextToSpeech />
     </div>
   );
