@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './TextToSpeech.css'; // Import CSS styles for the component
 
 const TextToSpeech = () => {
@@ -9,6 +9,7 @@ const TextToSpeech = () => {
   const [pitch, setPitch] = useState(1);
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     const populateVoices = () => {
@@ -24,6 +25,20 @@ const TextToSpeech = () => {
       speechSynthesis.onvoiceschanged = null;
     };
   }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
+
+  const handleOutsideClick = (e) => {
+    if (textareaRef.current && !textareaRef.current.contains(e.target)) {
+      handleTextChange();
+    }
+  };
 
   const handleTogglePlayback = () => {
     if (isPlaying) {
@@ -51,8 +66,11 @@ const TextToSpeech = () => {
     setIsPlaying(false);
   };
 
-  const handleTextChange = (e) => {
-    setText(e.target.value);
+  const handleTextChange = () => {
+    const cleanedText = textareaRef.current.value
+      .replace(/[\r\n]+/g, ' ')
+      .trim();
+    setText(cleanedText);
   };
 
   const handleVolumeChange = (e) => {
@@ -77,6 +95,8 @@ const TextToSpeech = () => {
     <div className="container">
       <div className="circle" onClick={handleTogglePlayback}>
         <span className={`icon ${isPlaying ? 'stop' : 'play'}`} />
+      </div>
+      <div className="text-area-container">
       </div>
       <label className="label">
         Voice:
@@ -129,10 +149,13 @@ const TextToSpeech = () => {
         />
       </label>
       <textarea
-        value={text}
-        onChange={handleTextChange}
-        className="text-input"
-      />
+          ref={textareaRef}
+          value={text}
+          onChange={handleTextChange}
+          className="text-input"
+          placeholder="Enter text..."
+          wrap="hard"
+        />
     </div>
   );
 };
