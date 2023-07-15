@@ -1,6 +1,12 @@
 @font-face {
+      /* other formats include: 'woff2', 'truetype, 'opentype',
+      'embedded-opentype', and 'svg' */
     font-family: 'Alegreya';
     src: local('Alegreya'), url(../fonts/alegreya/Alegreya-Italic[wght].ttf) format('truetype');
+    
+    font-family: 'Bobagum';
+    src: local('Bobagum'), url(../fonts/bobagum/bobagum.otf) format('opentype');
+
   }
 
 .container {
@@ -18,9 +24,11 @@
   }
 
   h1 {
-    font-family: Tahoma, Verdana, sans-serif;
+    font-family: "Bobagum", Verdana, sans-serif;
+    font-size: 80px;
     color: white;
     text-align: center;
+    margin-bottom: 20px;
   }
   
   .circle {
@@ -37,7 +45,7 @@
   
   .icon {
     color: black;
-    font-size: 32px;
+    font-size: 35px;
   }
   
   .icon.stop:before {
